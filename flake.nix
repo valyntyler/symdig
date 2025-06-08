@@ -6,6 +6,7 @@
   };
 
   outputs = {
+    self,
     nixpkgs,
     flake-utils,
     ...
@@ -14,8 +15,22 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
       in {
-        devShells.default = pkgs.mkShell {
+        packages.default = self.packages.symdig;
+        packages.symdig = pkgs.stdenv.mkDerivation {
+          name = "symdig";
+          src = self;
           buildInputs = with pkgs; [nushell];
+          installPhase = ''
+            mkdir -p $out/bin
+            cp ./symdig.nu $out/bin/symdig
+            chmod +x $out/bin/symdig
+          '';
+        };
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            nushell
+            self.packages.${system}.symdig
+          ];
         };
       }
     );
