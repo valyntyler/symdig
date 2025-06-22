@@ -15,7 +15,7 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
       in {
-        packages.default = self.packages.symdig;
+        packages.default = self.packages.${system}.symdig;
         packages.symdig = pkgs.stdenv.mkDerivation {
           name = "symdig";
           src = self;
