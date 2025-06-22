@@ -17,6 +17,6 @@ def recurse []: string -> string {
   }
 }
 
-def main [] {
-  "blender" | sym-path | recurse
+def main [app: string] {
+  $app | sym-path | recurse
 }
